@@ -8,9 +8,6 @@ from rest_framework import status
 
 # Create your views here.
 # 백엔드(DRF)의 기능적인 부분이 들어가는 파일
-@api_view(['GET'])
-def helloAPI(request):
-    return Response('hello world!')
 
 @api_view(['GET'])
 def randomQuiz(request, id):# api 호출시 id로 전달받을 퀴즈의 수를 명시함
@@ -29,6 +26,14 @@ def totalQuiz(request):
 def theQuiz(request, pk):# primary key의 줄임말
     theQuiz = Quiz.objects.get(index=pk)# index의 값이 pk와 같은 object를 찾아서 theQuiz 변수에 넣어줌
     serializer = QuizSerializer(theQuiz, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getLatest(request):
+    totalQuiz = Quiz.objects.all()# 전체 Quiz 오브젝트들을 변수에 넣음
+    index = len(totalQuiz)# 전체 Quiz들의 크기를 변수에 저장
+    latestQuiz = Quiz.objects.get(index=index)# index의 값이 퀴즈들 전체 Quiz 인스턴스 수와 같은 인스턴스를 변수에 넣어줌
+    serializer = QuizSerializer(latestQuiz, many=False)# 시리얼라이저를 설정해줌
     return Response(serializer.data)
 
 @api_view(['POST'])
